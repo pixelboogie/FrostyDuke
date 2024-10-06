@@ -26,17 +26,38 @@ async function agent(query) {
     // for (let i = 0; i < MAX_ITERATIONS; i++) {
     //     console.log(`Iteration #${i + 1}`)
         const response = await openai.chat.completions.create({
-            model: "gpt-3.5-turbo",
+            model: "gpt-3.5-turbo-1106",
             messages,
             tools
         })
 
-        // const responseText = response.choices[0].message.content
-        // console.log(response)
+        
         console.log(response.choices[0])
+
+        // this gets the value of finish_reason and renames it finishReason
+        const { finish_reason: finishReason, message } = response.choices[0]
+        const { tool_calls: toolCalls } = message
+
+        if (finishReason === "stop") {
+            console.log(message.content)
+            console.log("AGENT ENDING")
+            return
+        }else if (finishReason === "tool_calls"){
+            console.log("******** tool_calls *********")
+            for(const toolCall of toolCalls){
+                const functionName = toolCall.function.name
+                const functionToCall = availableFunctions[functionName]
+                const functionResponse = await functionToCall()
+                console.log(functionResponse)
+                // get the function name
+                // access the actual function from the array of available functions
+                // call that function
+                // console.log the result
+            }
+        }
+        
+           
     // }
 }
 
-// console.log(await agent("What are some activity ideas that I can do this afternoon based on my location and weather?"))
-
-await agent("How are you today?")
+await agent("What's the current weather?")

@@ -1,5 +1,19 @@
 
 
+
+
+-----------------------------
+
+// Check finish_reason
+// if "stop"
+    // return the result
+// else if "tool_calls"
+    // call functions
+            // get the function name
+                // access the actual function from the array of available functions
+                // call that function
+                // console.log the result
+
 ------------------------------
 
 OpenAI Functions
@@ -7,11 +21,8 @@ Rewrite some using Functions
 Get rid of system prompt
 Moved tools to external tools.js
 
-
 More about openai tools here:
 https://platform.openai.com/docs/api-reference/chat/create#chat-create-tools
-
-
 
 ------------------------------
 
