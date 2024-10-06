@@ -62,17 +62,55 @@ Answer: <Suggested activities based on sunny weather that are highly specific to
 //   console.log(response.choices[0].message.content)
 // }
 
-
-async function agent(query){
-   const response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo-0125",
-      messages: [
-         { role: "system", content: systemPrompt},
-         {role: "user", content: query }
-      ]
-   })
-   console.log(response.choices[0].message.content)
+const availableFunctions = {
+    "getCurrentWeather": getCurrentWeather,
+    "getLocation": getLocation
 }
 
-// main(); 
-agent("What book should I read next? I like self-help books.")
+
+
+async function agent(query) {
+
+    const messages = [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: query }
+    ]
+
+    const actionRegex = /^Action: (\w+): (.*)$/
+    const MAX_ITERATIONS = 5
+
+    for (let i = 0; i < MAX_ITERATIONS; i++) {
+        console.log(`Iteration #${i + 1}`)
+        const response = await openai.chat.completions.create({
+            model: "gpt-3.5-turbo",
+            messages
+        })
+
+        const responseText = response.choices[0].message.content
+        console.log(responseText)
+        messages.push({ role: "assistant", content: responseText })
+        const responseLines = responseText.split("\n")
+        console.log(responseLines)
+
+        const foundActionStr = responseLines.find(str => actionRegex.test(str))
+
+        if (foundActionStr) {
+            const actions = actionRegex["exec"](foundActionStr)
+            const [_, action, actionArg] = actions
+
+            if (!availableFunctions.hasOwnProperty(action)) {
+                throw new Error(`Unknown action: ${action}: ${actionArg}`)
+            }
+            console.log(`Calling function ${action} with argument ${actionArg}`)
+            const observation = await availableFunctions[action](actionArg)
+            messages.push({ role: "assistant", content: `Observation:: ${observation}` })
+        } else {
+            console.log("Agent finished with task")
+            return responseText
+        }
+    }
+
+
+}
+
+console.log(await agent("What are some activity ideas that I can do this afternoon based on my location and weather?"))

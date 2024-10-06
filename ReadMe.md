@@ -7,8 +7,24 @@
 
 
 
+Added: Search & Parse "Action", Obversation, Calling the function,  looping, log agent's response
 
 
+------------------------------
+
+
+* PLAN:
+* 1. Split the string on the newline character \n
+* 2. Search through the array of strings for one that has "Action:"
+* 3. Parse the action (function and parameter) from the string
+* 4. Calling the function
+* 5. Add an "Obversation" message with the results of the function call
+
+installed nodeamon
+so it will auto update without me restarting node each time
+To start the project with nodemon so that it will autoupdate as I edit:
+    npx nodemon src/index.js
+    Ctrl + C to end
 
 ------------------------------
 

@@ -1,13 +1,13 @@
 export async function getCurrentWeather(){
   
     const weather = {
-        temperature: "72",
+        temperature: "22",
         unit: "F",
-        forecast: "Sunny"
+        forecast: "Overcast, calm"
     }
 
     return JSON.stringify(weather) 
 }
 export async function getLocation(){
-    return "Las Vegas, NV"
+    return "Park City, UT"
 }
