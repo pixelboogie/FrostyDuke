@@ -23,8 +23,8 @@ async function agent(query) {
 
     const MAX_ITERATIONS = 5
 
-    // for (let i = 0; i < MAX_ITERATIONS; i++) {
-    //     console.log(`Iteration #${i + 1}`)
+    for (let i = 0; i < MAX_ITERATIONS; i++) {
+        console.log(`Iteration #${i + 1}`)
         const response = await openai.chat.completions.create({
             model: "gpt-3.5-turbo-1106",
             messages,
@@ -37,6 +37,7 @@ async function agent(query) {
         // this gets the value of finish_reason and renames it finishReason
         const { finish_reason: finishReason, message } = response.choices[0]
         const { tool_calls: toolCalls } = message
+        messages.push(message)
 
         if (finishReason === "stop") {
             console.log(message.content)
@@ -49,15 +50,17 @@ async function agent(query) {
                 const functionToCall = availableFunctions[functionName]
                 const functionResponse = await functionToCall()
                 console.log(functionResponse)
-                // get the function name
-                // access the actual function from the array of available functions
-                // call that function
-                // console.log the result
+                messages.push({
+                    tool_call_id: toolCall.id,
+                    role: "tool",
+                    name: functionName,
+                    content: functionResponse
+                })
             }
         }
         
            
-    // }
+    }
 }
 
-await agent("What's the current weather?")
+await agent("What's the current weather in Tokyo and New York City and Oslo?")
