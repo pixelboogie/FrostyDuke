@@ -1,5 +1,6 @@
-export async function getCurrentWeather(){
-  
+export async function getCurrentWeather({ location }){
+    // console.log("location:", location)
+    // console.log("unit:", unit)
     const weather = {
         temperature: "22",
         unit: "F",
@@ -9,7 +10,13 @@ export async function getCurrentWeather(){
     return JSON.stringify(weather) 
 }
 export async function getLocation(){
-    return "Park City, UT"
+    try {
+        const response = await fetch('https://ipapi.co/json/')
+        const text = await response.json()
+        return JSON.stringify(text)
+      } catch (err) {
+        console.log(err)
+      }
 }
 
 
@@ -21,7 +28,13 @@ export const tools = [
             description: "Get the current weather",
             parameters: {
                 type: "object",
-                properties: {}
+                properties: {
+                    location: {
+                        type: "string",
+                        description: "The location from where to get the weather"
+                    },
+                },
+                required: ["location"]
             }
         }
     },

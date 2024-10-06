@@ -16,6 +16,7 @@ const availableFunctions = {
 
 async function agent(query) {
 
+
     const messages = [
         { role: "system", content: "You are a helpful AI agent. Give highly specific answers based on the information you're provided. Prefer to gather information with the tools provided to you rather than giving basic, generic answers." },
         { role: "user", content: query }
@@ -32,11 +33,12 @@ async function agent(query) {
         })
 
         
-        console.log(response.choices[0])
-
+        
         // this gets the value of finish_reason and renames it finishReason
         const { finish_reason: finishReason, message } = response.choices[0]
         const { tool_calls: toolCalls } = message
+        console.log(toolCalls)
+        
         messages.push(message)
 
         if (finishReason === "stop") {
@@ -48,7 +50,9 @@ async function agent(query) {
             for(const toolCall of toolCalls){
                 const functionName = toolCall.function.name
                 const functionToCall = availableFunctions[functionName]
-                const functionResponse = await functionToCall()
+                const functionArgs = JSON.parse(toolCall.function.arguments)
+                console.log(functionArgs)
+                const functionResponse = await functionToCall(functionArgs)
                 console.log(functionResponse)
                 messages.push({
                     tool_call_id: toolCall.id,
@@ -58,9 +62,7 @@ async function agent(query) {
                 })
             }
         }
-        
-           
     }
 }
 
-await agent("What's the current weather in Tokyo and New York City and Oslo?")
+await agent("What's the current weather in my current location?")

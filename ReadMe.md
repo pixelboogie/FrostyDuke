@@ -1,5 +1,16 @@
 
 
+add location, unit as params to getcurrentweather
+add getLocation function to fetch an api
+the ip address checker didn't work - 
+Visit https://ipapi.co/ratelimited/ for details
+
+Add location, unit as params to getcurrentweather
+Added fetch an api, but was ratelimited
+
+
+-----------------------------
+
  Pushing to messages
 
 -----------------------------
