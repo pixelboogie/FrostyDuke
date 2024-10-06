@@ -1,17 +1,19 @@
 
 
+------------------------------
+
+OpenAI Functions
+Rewrite some using Functions
+Get rid of system prompt
+Moved tools to external tools.js
 
 
+More about openai tools here:
+https://platform.openai.com/docs/api-reference/chat/create#chat-create-tools
 
-
-
-
-
-Added: Search & Parse "Action", Obversation, Calling the function,  looping, log agent's response
 
 
 ------------------------------
-
 
 * PLAN:
 * 1. Split the string on the newline character \n
